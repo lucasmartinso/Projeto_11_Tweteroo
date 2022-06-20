@@ -12,15 +12,21 @@ const tweets = [];
 
 app.post("/sign-up", (request,response) => { 
     const usersData = request.body; 
-    usuario.push(usersData);  
-    console.log(usuario); 
+    usuario.push(usersData);   
+    console.log(usuario);  
+    if(usersData.username=== "" || usersData.avatar=== "") { 
+        response.sendStatus(400);
+    }
     response.status(200).send("OK");
 }); 
 
 app.post("/tweets", (request,response) => { 
-    const enviaTweet = request.body;
-    tweets.push(enviaTweet);   
-    console.log(enviaTweet);
+    const enviaTweet = request.body;   
+    if(enviaTweet.tweet==="") { 
+        response.sendStatus(400);
+    } else {
+        tweets.push(enviaTweet);
+    }
     response.status(200).send("OK");
 }); 
 
@@ -29,7 +35,6 @@ app.get("/tweets",(request,response) => {
         const pegaAvatar = avat.avatar;
         return pegaAvatar;
     });  
-    console.log(avatares);
 
     const recebeTweet = tweets.map(function(num) {
         const completo = {
@@ -48,7 +53,6 @@ app.get("/tweets",(request,response) => {
             contador++;
         } 
     } 
-    console.log(ultimosDez);
     response.status(200).send(ultimosDez);
 });
 
