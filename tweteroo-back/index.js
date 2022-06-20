@@ -8,38 +8,47 @@ app.use(cors());
 app.use(express.json());
 
 const usuario = []; 
-const tweet = []; 
+const tweets = []; 
 
 app.post("/sign-up", (request,response) => { 
-    const body = request.body; 
-    usuario.push(body);  
-    console.log(usuario);
+    const usersData = request.body; 
+    usuario.push(usersData);  
+    console.log(usuario); 
     response.status(200).send("OK");
 }); 
 
 app.post("/tweets", (request,response) => { 
-    const body = { 
-        id : (tweet.length+1),
-        username: "bobesponja",
-        tweet: "eu amo o hub",
-    }; 
-    tweet.push(body);  
-    response.send("OK");
+    const enviaTweet = request.body;
+    tweets.push(enviaTweet);   
+    console.log(enviaTweet);
+    response.status(200).send("OK");
 }); 
 
-app.get("/tweets",(request,response) => { 
-    const body = tweet; 
+app.get("/tweets",(request,response) => {  
+    const avatares = usuario.map(function(avat) { 
+        const pegaAvatar = avat.avatar;
+        return pegaAvatar;
+    });  
+    console.log(avatares);
+
+    const recebeTweet = tweets.map(function(num) {
+        const completo = {
+                username : num.username, 
+                avatar : avatares[(usuario.length-1)], 
+                tweet : num.tweet
+            }; 
+        return completo;
+    });  
     const ultimosDez = []; 
     let contador =0;
 
-    if(body.length>0) {
-        for(let i=body.length-1; contador<10; i--) { 
-            ultimosDez.push(body[i]); 
+    if(recebeTweet.length>0) {
+        for(let i=recebeTweet.length-1; contador<10 && contador<recebeTweet.length; i--) { 
+            ultimosDez.push(recebeTweet[i]); 
             contador++;
         } 
-    }
-    console.log(body.length);  
-    console.log(ultimosDez); 
+    } 
+    console.log(ultimosDez);
     response.status(200).send(ultimosDez);
 });
 
